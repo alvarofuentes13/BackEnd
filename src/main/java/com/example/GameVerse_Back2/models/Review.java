@@ -17,7 +17,7 @@ public class Review {
     private LocalDateTime fechaCompra;
 
     private double calificacion;
-
+    private boolean favorito;
     private String comentario;
 
     @ManyToOne
@@ -38,6 +38,8 @@ public class Review {
     public void setCalificacion(double calificacion) { this.calificacion = calificacion; }
     public String getComentario() { return comentario; }
     public void setComentario(String comentario) { this.comentario = comentario; }
+    public boolean isFavorito() {return favorito;}
+    public void setFavorito(boolean favorito) {this.favorito = favorito;}
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
     public Videojuego getVideojuego() { return videojuego; }
