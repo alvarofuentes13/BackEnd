@@ -38,18 +38,6 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-//    public boolean validatePassword(String rawPassword, String encryptedPassword) {
-//        return passwordEncoder.matches(rawPassword, encryptedPassword);
-//    }
-//
-//    public Usuario validarCredenciales(String email, String password) {
-//        Usuario usuario = usuarioRepository.findByEmail(email);
-//        if (usuario == null) {
-//            return null; // No existe el usuario
-//        }
-//
-//        // Comparar la contraseña ingresada con la almacenada (encriptada)
-//        if (passwordEncoder.matches(password, usuario.getPassword())) return usuario;
-//        return null;
-//    }
+    public Usuario updateUser(Usuario usuario){ return usuarioRepository.save(usuario); }
+
 }

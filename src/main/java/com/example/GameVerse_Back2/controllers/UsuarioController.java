@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
@@ -25,6 +26,25 @@ public class UsuarioController {
         Usuario newUser = usuarioService.registerUser(usuario);
         return ResponseEntity.ok(newUser);
     }
+
+    @PutMapping("/id/{id}")
+    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuarioActualizado) {
+        Usuario usuarioExistente = usuarioService.findById(id);
+        if (usuarioExistente == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Solo actualiza los campos que quieras permitir cambiar
+        usuarioExistente.setAvatar(usuarioActualizado.getAvatar());
+        usuarioExistente.setName(usuarioActualizado.getName());
+        usuarioExistente.setEmail(usuarioActualizado.getEmail());
+        usuarioExistente.setPassword(usuarioActualizado.getPassword());
+        usuarioExistente.setBiografia(usuarioActualizado.getBiografia());
+
+        Usuario actualizado = usuarioService.updateUser(usuarioExistente);
+        return ResponseEntity.ok(actualizado);
+    }
+
 
     @GetMapping
     public List<Usuario> getAllUsuarios() {
@@ -45,7 +65,7 @@ public class UsuarioController {
     }
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteUsuario(@PathVariable Long id) {
         usuarioService.deleteById(id);
         return ResponseEntity.noContent().build();
