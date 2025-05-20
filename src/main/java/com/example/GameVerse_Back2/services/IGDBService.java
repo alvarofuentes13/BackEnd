@@ -43,6 +43,26 @@ public class IGDBService {
         }
     }
 
+    public List<IGDBGameDTO> searchGames(String query) {
+        HttpHeaders headers = createHeaders();
+
+        String body = String.format("""
+        search "%s";
+        fields name, summary, first_release_date, genres.name, cover.url, involved_companies.company.name;
+        limit 20;
+    """, query);
+
+        HttpEntity<String> request = new HttpEntity<>(body, headers);
+
+        try {
+            String responseBody = restTemplate.postForObject(igdbApiUrl, request, String.class);
+            return parseResponse(responseBody);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
     public IGDBGameDTO getGameById(Long id) {
         HttpHeaders headers = createHeaders();
         String query = String.format("""
@@ -75,7 +95,7 @@ public class IGDBService {
         return String.format("""
                     fields name, summary, first_release_date, genres.name, cover.url, involved_companies.company.name;
                     limit %d;
-                    sort popularity desc;
+                    sort rating desc;
                 """, limit);
     }
 
