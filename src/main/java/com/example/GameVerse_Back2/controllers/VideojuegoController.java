@@ -27,7 +27,7 @@ public class VideojuegoController {
         return videojuego != null ? ResponseEntity.ok(videojuego) : ResponseEntity.notFound().build();
     }
 
-    @PostMapping
+    @PostMapping("/id")
     public Videojuego createVideojuego(@RequestBody Videojuego videojuego) {
         return videojuegoService.save(videojuego);
     }

@@ -2,6 +2,7 @@ package com.example.GameVerse_Back2.services;
 
 import com.example.GameVerse_Back2.models.Review;
 import com.example.GameVerse_Back2.models.Usuario;
+import com.example.GameVerse_Back2.models.Videojuego;
 import com.example.GameVerse_Back2.repositories.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class ReviewService {
         return reviewRepository.findByUsuarioId(id);
     };
 
-    public List<Review> getReviewsByVidejuegoId(Long id) {
-        return reviewRepository.findByVideojuegoId(id);
-    };
+    public List<Review> getReviewsByVideojuego(Videojuego videojuego) {
+        return reviewRepository.findByVideojuego(videojuego);
+    }
 }

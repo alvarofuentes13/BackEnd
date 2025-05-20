@@ -11,7 +11,7 @@ import java.util.List;
 public class Videojuego {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true, nullable = false)
     private Long id;
 
     @Column(nullable = false)

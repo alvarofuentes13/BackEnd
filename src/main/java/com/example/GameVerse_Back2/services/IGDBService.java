@@ -43,6 +43,26 @@ public class IGDBService {
         }
     }
 
+    public IGDBGameDTO getGameById(Long id) {
+        HttpHeaders headers = createHeaders();
+        String query = String.format("""
+                    fields name, summary, first_release_date, genres.name, cover.url, involved_companies.company.name;
+                    where id = %d;
+                    limit 1;
+                """, id);
+        HttpEntity<String> request = new HttpEntity<>(query, headers);
+
+        try {
+            String responseBody = restTemplate.postForObject(igdbApiUrl, request, String.class);
+            List<IGDBGameDTO> juegos = parseResponse(responseBody);
+            return juegos.isEmpty() ? null : juegos.get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
     private HttpHeaders createHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Client-ID", clientId);
@@ -53,10 +73,10 @@ public class IGDBService {
 
     private String buildQuery(int limit) {
         return String.format("""
-            fields name, summary, first_release_date, genres.name, cover.url, involved_companies.company.name;
-            limit %d;
-            sort popularity desc;
-        """, limit);
+                    fields name, summary, first_release_date, genres.name, cover.url, involved_companies.company.name;
+                    limit %d;
+                    sort popularity desc;
+                """, limit);
     }
 
     private List<IGDBGameDTO> parseResponse(String responseBody) {
@@ -109,4 +129,6 @@ public class IGDBService {
                 ? companies.get(0).path("company").path("name").asText()
                 : "Unknown";
     }
+
+
 }
