@@ -94,8 +94,9 @@ public class IGDBService {
     private String buildQuery(int limit) {
         return String.format("""
                     fields name, summary, first_release_date, genres.name, cover.url, involved_companies.company.name;
+                    where rating > 85 & platforms = 48;
                     limit %d;
-                    sort rating desc;
+                    sort popularity desc;
                 """, limit);
     }
 

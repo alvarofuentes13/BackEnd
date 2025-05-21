@@ -66,5 +66,4 @@ public class ReviewController {
         return ResponseEntity.ok(reviews); // Devuelve lista vacía si no hay reseñas
     }
 
-
 }
