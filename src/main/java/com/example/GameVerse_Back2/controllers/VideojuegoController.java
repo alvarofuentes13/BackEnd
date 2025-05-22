@@ -37,4 +37,10 @@ public class VideojuegoController {
         videojuegoService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/get-or-create/{apiId}")
+    public ResponseEntity<Videojuego> getOrCreateByApiId(@PathVariable Long apiId) {
+        Videojuego videojuego = videojuegoService.getOrCreateByApiId(apiId);
+        return ResponseEntity.ok(videojuego);
+    }
 }

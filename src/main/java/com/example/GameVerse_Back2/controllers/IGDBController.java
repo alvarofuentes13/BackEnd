@@ -1,8 +1,10 @@
 package com.example.GameVerse_Back2.controllers;
 
 import com.example.GameVerse_Back2.dto.IGDBGameDTO;
+import com.example.GameVerse_Back2.models.Review;
 import com.example.GameVerse_Back2.models.Videojuego;
 import com.example.GameVerse_Back2.services.IGDBService;
+import com.example.GameVerse_Back2.services.VideojuegoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +33,10 @@ public class IGDBController {
         }
     }
 
-
     @GetMapping("/videojuegos/search/{title}")
     public ResponseEntity<List<IGDBGameDTO>> searchExternalGames(@PathVariable String title) {
         List<IGDBGameDTO> juegos = igdbService.searchGames(title);
         return ResponseEntity.ok(juegos);
     }
+
 }

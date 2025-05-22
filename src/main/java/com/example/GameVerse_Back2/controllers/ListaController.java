@@ -1,6 +1,8 @@
 package com.example.GameVerse_Back2.controllers;
 
 import com.example.GameVerse_Back2.models.Lista;
+import com.example.GameVerse_Back2.models.Review;
+import com.example.GameVerse_Back2.models.Videojuego;
 import com.example.GameVerse_Back2.services.ListaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,4 +39,6 @@ public class ListaController {
         listaService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+
 }

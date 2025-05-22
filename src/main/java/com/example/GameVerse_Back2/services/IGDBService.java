@@ -75,7 +75,7 @@ public class IGDBService {
         try {
             String responseBody = restTemplate.postForObject(igdbApiUrl, request, String.class);
             List<IGDBGameDTO> juegos = parseResponse(responseBody);
-            return juegos.isEmpty() ? null : juegos.get(0);
+            return juegos.isEmpty() ? null : juegos.getFirst();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
