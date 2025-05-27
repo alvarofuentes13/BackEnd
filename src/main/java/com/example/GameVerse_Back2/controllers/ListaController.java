@@ -40,5 +40,10 @@ public class ListaController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @PostMapping("/{listaId}/videojuegos")
+    public ResponseEntity<?> agregarJuegosALista(@PathVariable Long listaId, @RequestBody List<Long> videojuegosIds) {
+        return listaService.agregarVideojuegosALaLista(listaId, videojuegosIds)
+                .map(lista -> ResponseEntity.ok("Videojuegos agregados correctamente."))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }

@@ -23,8 +23,9 @@ public class Videojuego {
     @ElementCollection
     private List<String> plataformas = new ArrayList<>();
 
-    @Column(length = 1000)
+    @Column(length = 1500)
     private String descripcion;
+
     private String portada;
 
     @OneToMany(mappedBy = "videojuego", cascade = CascadeType.ALL, orphanRemoval = true)
