@@ -54,4 +54,8 @@ public class ListaService {
 
         return Optional.of(listaRepository.save(lista));
     }
+
+    public List<Lista> buscarPorNombre(String nombre) {
+        return listaRepository.findByNombreContainingIgnoreCase(nombre);
+    }
 }

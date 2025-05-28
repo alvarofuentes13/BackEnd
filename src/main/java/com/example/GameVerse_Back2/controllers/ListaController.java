@@ -46,4 +46,9 @@ public class ListaController {
                 .map(lista -> ResponseEntity.ok("Videojuegos agregados correctamente."))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/search/{nombre}")
+    public List<Lista> buscarListasPorNombre(@PathVariable String nombre) {
+        return listaService.buscarPorNombre(nombre);
+    }
 }
