@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -17,7 +18,7 @@ public class UsuarioService {
     
     
 
-    public Usuario getUsuarioByEmail(String email) {
+    public Optional<Usuario> getUsuarioByEmail(String email) {
         return usuarioRepository.findByEmail(email);
     }
 

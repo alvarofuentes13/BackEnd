@@ -58,10 +58,10 @@ public class UsuarioController {
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<Usuario> getUsuarioByEmail(@PathVariable String email) {
-        Usuario usuario = usuarioService.getUsuarioByEmail(email);
+    public ResponseEntity<Optional<Usuario>> getUsuarioByEmail(@PathVariable String email) {
+        Optional<Usuario> usuario = usuarioService.getUsuarioByEmail(email);
 
-        return usuario != null ? ResponseEntity.ok(usuario) : ResponseEntity.notFound().build();
+        return usuario.isPresent() ? ResponseEntity.ok(usuario) : ResponseEntity.notFound().build();
     }
 
 
