@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -44,6 +45,9 @@ public class Usuario {
     )
     private Set<Usuario> seguidores = new HashSet<>();
 
+    @ManyToMany(mappedBy = "seguidores")
+    private Set<Usuario> seguidos = new HashSet<>();
+
     public Usuario() {}
 
     public Long getId() { return id; }
@@ -60,4 +64,16 @@ public class Usuario {
     public void setAvatar(String avatar) { this.avatar = avatar; }
     public String getBiografia() { return biografia; }
     public void setBiografia(String biografia) { this.biografia = biografia; }
+    public Set<Usuario> getSeguidores() {
+        return seguidores;
+    }
+    public void setSeguidores(Set<Usuario> seguidores) {
+        this.seguidores = seguidores;
+    }
+    public Set<Usuario> getSeguidos() {
+        return seguidos;
+    }
+    public void setSeguidos(Set<Usuario> seguidos) {
+        this.seguidos = seguidos;
+    }
 }

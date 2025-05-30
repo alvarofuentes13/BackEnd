@@ -1,12 +1,16 @@
 package com.example.GameVerse_Back2.controllers;
 
 import com.example.GameVerse_Back2.models.Usuario;
+import com.example.GameVerse_Back2.repositories.UsuarioRepository;
 import com.example.GameVerse_Back2.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin("*")
@@ -16,6 +20,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
@@ -70,14 +77,30 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<Usuario> login(@RequestBody Usuario usuario) {
-//        Usuario usuarioAutenticado = usuarioService.validarCredenciales(usuario.getEmail(), usuario.getPassword());
-//
-//        if (usuarioAutenticado == null) {
-//            return ResponseEntity.status(401).body(null); // No autenticado
-//        }
-//
-//        return ResponseEntity.ok(usuarioAutenticado); // Usuario autenticado
-//    }
+    @PutMapping("/{seguidorId}/seguir/{seguidoId}")
+    public ResponseEntity<?> seguirUsuario(@PathVariable Long seguidorId, @PathVariable Long seguidoId) {
+        usuarioService.seguirUsuario(seguidorId, seguidoId);
+        return ResponseEntity.ok("Usuario seguido con éxito");
+    }
+
+    @GetMapping("/perfil/{id}")
+    public ResponseEntity<?> getPerfilUsuario(@PathVariable Long id) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+
+        if (usuarioOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+        }
+
+        Usuario usuario = usuarioOptional.get();
+
+        int seguidores = usuarioRepository.countSeguidores(id);
+        int seguidos = usuarioRepository.countSeguidos(id);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("usuario", usuario);
+        response.put("seguidores", seguidores);
+        response.put("seguidos", seguidos);
+
+        return ResponseEntity.ok(response);
+    }
 }

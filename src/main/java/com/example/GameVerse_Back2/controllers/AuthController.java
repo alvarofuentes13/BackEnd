@@ -5,10 +5,12 @@ import com.example.GameVerse_Back2.dto.RegisterRequest;
 import com.example.GameVerse_Back2.models.Usuario;
 import com.example.GameVerse_Back2.repositories.UsuarioRepository;
 import com.example.GameVerse_Back2.security.JwtUtil;
+import com.example.GameVerse_Back2.services.UsuarioService;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -25,6 +27,12 @@ public class AuthController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private final JwtUtil jwtUtil;
 
     public AuthController(JwtUtil jwtUtil) {
@@ -35,7 +43,7 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         return usuarioRepository.findByEmail(loginRequest.getEmail())
                 .map(usuario -> {
-                    if (Objects.equals(loginRequest.getPassword(), usuario.getPassword())) {
+                    if (passwordEncoder.matches(loginRequest.getPassword(), usuario.getPassword())) {
                         String token = jwtUtil.generateToken(usuario.getEmail());
 
                         usuario.setPassword(null); // no enviar la contraseña
@@ -49,7 +57,7 @@ public class AuthController {
                         return ResponseEntity.status(401).body("Contraseña incorrecta");
                     }
                 })
-                .orElse(ResponseEntity.status(401).body("Usuario no encontrado"));
+                .orElse(ResponseEntity.status(402).body("Usuario no encontrado"));
     }
 
     @PostMapping("/register")
@@ -68,7 +76,7 @@ public class AuthController {
         nuevoUsuario.setFechaRegistro(LocalDateTime.now());
         nuevoUsuario.setAvatar(null); // o un valor por defecto
 
-        Usuario saved = usuarioRepository.save(nuevoUsuario);
+        Usuario saved = usuarioService.registerUser(nuevoUsuario);
 
         // Generar token
         String token = jwtUtil.generateToken(saved.getEmail());
