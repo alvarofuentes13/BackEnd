@@ -38,7 +38,6 @@ public class UsuarioController {
         usuarioExistente.setAvatar(usuarioActualizado.getAvatar());
         usuarioExistente.setName(usuarioActualizado.getName());
         usuarioExistente.setEmail(usuarioActualizado.getEmail());
-        usuarioExistente.setPassword(usuarioActualizado.getPassword());
         usuarioExistente.setBiografia(usuarioActualizado.getBiografia());
 
         Usuario actualizado = usuarioService.updateUser(usuarioExistente);

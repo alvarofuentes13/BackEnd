@@ -1,6 +1,7 @@
 package com.example.GameVerse_Back2.controllers;
 
 import com.example.GameVerse_Back2.dto.LoginRequest;
+import com.example.GameVerse_Back2.dto.RegisterRequest;
 import com.example.GameVerse_Back2.models.Usuario;
 import com.example.GameVerse_Back2.repositories.UsuarioRepository;
 import com.example.GameVerse_Back2.security.JwtUtil;
@@ -49,6 +50,36 @@ public class AuthController {
                     }
                 })
                 .orElse(ResponseEntity.status(401).body("Usuario no encontrado"));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        // Validar si el email ya está en uso
+        if (usuarioRepository.findByEmail(request.getEmail()).isPresent()) {
+            return ResponseEntity.status(400).body("El correo ya está en uso");
+        }
+
+        // Crear usuario
+        Usuario nuevoUsuario = new Usuario();
+        nuevoUsuario.setName(request.getName());
+        nuevoUsuario.setEmail(request.getEmail());
+        nuevoUsuario.setPassword(request.getPassword()); // Recomendado: cifrar
+        nuevoUsuario.setBiografia("Nuevo usuario en GameVerse");
+        nuevoUsuario.setFechaRegistro(LocalDateTime.now());
+        nuevoUsuario.setAvatar(null); // o un valor por defecto
+
+        Usuario saved = usuarioRepository.save(nuevoUsuario);
+
+        // Generar token
+        String token = jwtUtil.generateToken(saved.getEmail());
+
+        saved.setPassword(null); // no enviar la contraseña
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("usuario", saved);
+        response.put("token", token);
+
+        return ResponseEntity.status(201).body(response);
     }
 
 

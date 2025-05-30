@@ -15,8 +15,6 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    
-    
 
     public Optional<Usuario> getUsuarioByEmail(String email) {
         return usuarioRepository.findByEmail(email);

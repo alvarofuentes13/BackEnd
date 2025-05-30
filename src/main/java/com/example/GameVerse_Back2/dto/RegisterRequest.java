@@ -1,8 +1,9 @@
 package com.example.GameVerse_Back2.dto;
 
-public class LoginRequest {
+public class RegisterRequest {
 
     private String email;
+    private String name;
     private String password;
 
     public String getEmail() {
@@ -10,6 +11,13 @@ public class LoginRequest {
     }
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPassword() {
