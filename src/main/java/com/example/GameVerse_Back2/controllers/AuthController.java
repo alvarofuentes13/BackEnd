@@ -2,6 +2,7 @@ package com.example.GameVerse_Back2.controllers;
 
 import com.example.GameVerse_Back2.dto.LoginRequest;
 import com.example.GameVerse_Back2.dto.RegisterRequest;
+import com.example.GameVerse_Back2.dto.UsuarioDTO;
 import com.example.GameVerse_Back2.models.Usuario;
 import com.example.GameVerse_Back2.repositories.UsuarioRepository;
 import com.example.GameVerse_Back2.security.JwtUtil;
@@ -48,8 +49,10 @@ public class AuthController {
 
                         usuario.setPassword(null); // no enviar la contraseña
 
+                        UsuarioDTO usuarioDTO = new UsuarioDTO(usuario);
+
                         Map<String, Object> response = new HashMap<>();
-                        response.put("usuario", usuario);
+                        response.put("usuario", usuarioDTO);
                         response.put("token", token);
 
                         return ResponseEntity.ok(response);

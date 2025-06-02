@@ -103,4 +103,16 @@ public class UsuarioController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/count_seguidores/{id}")
+    public ResponseEntity<?> getCountSeguidores(@PathVariable Long id) {
+        int seguidores = usuarioRepository.countSeguidores(id);
+
+        if (seguidores < 1) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No tiene seguidores");
+        }
+
+        return ResponseEntity.ok(seguidores);
+
+    }
 }
