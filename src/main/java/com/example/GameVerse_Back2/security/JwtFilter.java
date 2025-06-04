@@ -18,6 +18,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
+    // Constructor que inyecta JwtUtil
     public JwtFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
@@ -34,20 +35,24 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
+        // Obtener el encabezado de autorización
         String authorizationHeader = request.getHeader("Authorization");
 
+        // Verificar si el encabezado contiene un token JWT
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring(7);
+            String token = authorizationHeader.substring(7); // Extraer el token
 
+            // Validar el token
             if (jwtUtil.validateToken(token)) {
-                String email = jwtUtil.extractEmail(token);
+                String email = jwtUtil.extractEmail(token); // Extraer el email del token
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        email, null, Collections.emptyList()
+                        email, null, Collections.emptyList() // Crear objeto de autenticación
                 );
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication); // Establecer autenticación en el contexto de seguridad
             }
         }
 
+        // Continuar con la cadena de filtros
         filterChain.doFilter(request, response);
     }
 }
