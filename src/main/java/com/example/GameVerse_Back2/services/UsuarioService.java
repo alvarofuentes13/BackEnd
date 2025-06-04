@@ -42,6 +42,25 @@ public class UsuarioService {
         usuarioRepository.save(seguido);
     }
 
+    public void dejarDeSeguirUsuario(Long seguidorId, Long seguidoId) {
+        Usuario seguidor = usuarioRepository.findById(seguidorId)
+                .orElseThrow(() -> new RuntimeException("Seguidor no encontrado"));
+
+        Usuario seguido = usuarioRepository.findById(seguidoId)
+                .orElseThrow(() -> new RuntimeException("Usuario a dejar de seguir no encontrado"));
+
+        seguido.getSeguidores().remove(seguidor);
+        usuarioRepository.save(seguido);
+    }
+
+    public boolean estaSiguiendo(Long seguidorId, Long seguidoId) {
+        Usuario seguido = usuarioRepository.findById(seguidoId)
+                .orElseThrow(() -> new RuntimeException("Usuario seguido no encontrado"));
+        return seguido.getSeguidores()
+                .stream()
+                .anyMatch(u -> u.getId().equals(seguidorId));
+    }
+
     public void deleteById(Long id) {
         usuarioRepository.deleteById(id);
     }

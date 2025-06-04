@@ -1,6 +1,5 @@
 package com.example.GameVerse_Back2.security;
 
-import org.hibernate.annotations.Comment;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Component;

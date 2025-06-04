@@ -38,4 +38,5 @@ public class ReviewService {
     public List<Review> getReviewsByVideojuego(Videojuego videojuego) {
         return reviewRepository.findByVideojuego(videojuego);
     }
+
 }

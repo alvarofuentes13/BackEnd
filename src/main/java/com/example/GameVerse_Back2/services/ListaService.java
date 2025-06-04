@@ -58,4 +58,8 @@ public class ListaService {
     public List<Lista> buscarPorNombre(String nombre) {
         return listaRepository.findByNombreContainingIgnoreCase(nombre);
     }
+
+    public List<Lista> buscarPorUsuario(Long usuarioId){
+        return listaRepository.findByUsuarioId(usuarioId);
+    }
 }

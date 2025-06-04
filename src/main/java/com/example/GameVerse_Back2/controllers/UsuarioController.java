@@ -83,6 +83,20 @@ public class UsuarioController {
         return ResponseEntity.ok("Usuario seguido con éxito");
     }
 
+    @PutMapping("/{seguidorId}/dejar-de-seguir/{seguidoId}")
+    public ResponseEntity<?> dejarDeSeguirUsuario(@PathVariable Long seguidorId, @PathVariable Long seguidoId) {
+        usuarioService.dejarDeSeguirUsuario(seguidorId, seguidoId);
+        return ResponseEntity.ok("Usuario dejado de seguir con éxito");
+    }
+
+    @GetMapping("/{seguidorId}/sigue-a/{seguidoId}")
+    public ResponseEntity<Boolean> estaSiguiendo(
+            @PathVariable Long seguidorId,
+            @PathVariable Long seguidoId) {
+        boolean siguiendo = usuarioService.estaSiguiendo(seguidorId, seguidoId);
+        return ResponseEntity.ok(siguiendo);
+    }
+
     @GetMapping("/perfil/{id}")
     public ResponseEntity<?> getPerfilUsuario(@PathVariable Long id) {
         Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
@@ -104,15 +118,28 @@ public class UsuarioController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/count_seguidos/{id}")
+    public ResponseEntity<?> getCountSeguidos(@PathVariable Long id) {
+        int seguidos = usuarioRepository.countSeguidos(id);
+
+        if (seguidos < 1) {
+            return ResponseEntity.ok(0);
+        }
+
+        return ResponseEntity.ok(seguidos);
+
+    }
+
     @GetMapping("/count_seguidores/{id}")
     public ResponseEntity<?> getCountSeguidores(@PathVariable Long id) {
         int seguidores = usuarioRepository.countSeguidores(id);
 
         if (seguidores < 1) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No tiene seguidores");
+            return ResponseEntity.ok(0);
         }
 
         return ResponseEntity.ok(seguidores);
 
     }
+
 }

@@ -1,14 +1,15 @@
 package com.example.GameVerse_Back2.controllers;
 
+import com.example.GameVerse_Back2.dto.ListaDTO;
 import com.example.GameVerse_Back2.models.Lista;
-import com.example.GameVerse_Back2.models.Review;
-import com.example.GameVerse_Back2.models.Videojuego;
 import com.example.GameVerse_Back2.services.ListaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @CrossOrigin("*")
 @RestController
@@ -19,19 +20,23 @@ public class ListaController {
     private ListaService listaService;
 
     @GetMapping
-    public List<Lista> getAllListas() {
-        return listaService.findAll();
+    public ResponseEntity<List<ListaDTO>> getAllListas() {
+        List<ListaDTO> listaDTOs = listaService.findAll().stream()
+                .map(ListaDTO::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(listaDTOs);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Lista> getListaById(@PathVariable Long id) {
+    public ResponseEntity<ListaDTO> getListaById(@PathVariable Long id) {
         Lista lista = listaService.findById(id);
-        return lista != null ? ResponseEntity.ok(lista) : ResponseEntity.notFound().build();
+        return lista != null ? ResponseEntity.ok(new ListaDTO(lista)) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public Lista createLista(@RequestBody Lista lista) {
-        return listaService.save(lista);
+    public ResponseEntity<ListaDTO> createLista(@RequestBody Lista lista) {
+        Lista nuevaLista = listaService.save(lista);
+        return ResponseEntity.ok(new ListaDTO(nuevaLista));
     }
 
     @DeleteMapping("/{id}")
@@ -42,13 +47,25 @@ public class ListaController {
 
     @PostMapping("/{listaId}/videojuegos")
     public ResponseEntity<?> agregarJuegosALista(@PathVariable Long listaId, @RequestBody List<Long> videojuegosIds) {
-        return listaService.agregarVideojuegosALaLista(listaId, videojuegosIds)
-                .map(lista -> ResponseEntity.ok("Videojuegos agregados correctamente."))
+        Optional<Lista> listaOpt = listaService.agregarVideojuegosALaLista(listaId, videojuegosIds);
+        return listaOpt
+                .map(lista -> ResponseEntity.ok(new ListaDTO(lista)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/search/{nombre}")
-    public List<Lista> buscarListasPorNombre(@PathVariable String nombre) {
-        return listaService.buscarPorNombre(nombre);
+    public ResponseEntity<List<ListaDTO>> buscarListasPorNombre(@PathVariable String nombre) {
+        List<ListaDTO> listaDTOs = listaService.buscarPorNombre(nombre).stream()
+                .map(ListaDTO::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(listaDTOs);
+    }
+
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<List<ListaDTO>> buscarListasPorUsuario(@PathVariable Long usuarioId){
+        List<ListaDTO> listasDTOs = listaService.buscarPorUsuario(usuarioId).stream()
+                .map(ListaDTO::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(listasDTOs);
     }
 }

@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ListaRepository extends JpaRepository<Lista, Long> {
     List<Lista> findByNombreContainingIgnoreCase(String nombre);
+    List<Lista> findByUsuarioId(Long usuarioId);
 }
