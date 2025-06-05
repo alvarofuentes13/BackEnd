@@ -10,7 +10,7 @@ public class ReviewDTO {
     private boolean favorito;  // Indica si es un videojuego favorito
     private String comentario;  // Comentario de la reseña
     private UsuarioDTO usuario;  // Usuario que hizo la reseña
-    private Videojuego videojuego;  // Videojuego al que pertenece la reseña
+    private VideojuegoDTO videojuego;  // Videojuego al que pertenece la reseña
 
     // Constructor que inicializa el DTO a partir de una entidad Review
     public ReviewDTO(Review review) {
@@ -19,7 +19,7 @@ public class ReviewDTO {
         this.calificacion = review.getCalificacion();  // Asigna la calificación de la reseña
         this.favorito = review.isFavorito();  // Asigna si es favorito
         this.usuario = new UsuarioDTO(review.getUsuario());  // Crea un UsuarioDTO a partir del usuario de la reseña
-        this.videojuego = review.getVideojuego();  // Asigna el videojuego relacionado
+        this.videojuego = new VideojuegoDTO(review.getVideojuego());  // Asigna el videojuego relacionado
     }
 
     // Getters y Setters para acceder y modificar los atributos
@@ -64,11 +64,11 @@ public class ReviewDTO {
         this.usuario = usuario;
     }
 
-    public Videojuego getVideojuego() {
+    public VideojuegoDTO getVideojuego() {
         return videojuego;
     }
 
-    public void setVideojuego(Videojuego videojuego) {
+    public void setVideojuego(VideojuegoDTO videojuego) {
         this.videojuego = videojuego;
     }
 }

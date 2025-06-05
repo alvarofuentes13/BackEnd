@@ -4,6 +4,7 @@ import com.example.GameVerse_Back2.models.Lista;
 import com.example.GameVerse_Back2.models.Videojuego;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 // Clase DTO (Data Transfer Object) para representar una lista de videojuegos
 public class ListaDTO {
@@ -11,7 +12,7 @@ public class ListaDTO {
     private String nombre;  // Nombre de la lista
     private String descripcion;  // Descripción de la lista
     private UsuarioDTO usuario;  // Usuario asociado a la lista
-    private List<Videojuego> videojuegos;  // Lista de videojuegos en esta lista
+    private List<VideojuegoDTO> videojuegos;  // Lista de videojuegos en esta lista
 
     // Constructor que inicializa el DTO a partir de una entidad Lista
     public ListaDTO(Lista lista){
@@ -19,7 +20,10 @@ public class ListaDTO {
         this.nombre = lista.getNombre();  // Asigna el nombre de la lista
         this.descripcion = lista.getDescripcion();  // Asigna la descripción de la lista
         this.usuario = new UsuarioDTO(lista.getUsuario());  // Crea un UsuarioDTO a partir del usuario de la lista
-        this.videojuegos = lista.getVideojuegos();  // Asigna la lista de videojuegos
+        this.videojuegos = lista.getVideojuegos()
+                .stream()
+                .map(VideojuegoDTO::new)
+                .collect(Collectors.toList());
     }
 
     // Getters y Setters para acceder y modificar los atributos
@@ -56,11 +60,11 @@ public class ListaDTO {
         this.usuario = usuario;
     }
 
-    public List<Videojuego> getVideojuegos() {
+    public List<VideojuegoDTO> getVideojuegos() {
         return videojuegos;
     }
 
-    public void setVideojuegos(List<Videojuego> videojuegos) {
+    public void setVideojuegos(List<VideojuegoDTO> videojuegos) {
         this.videojuegos = videojuegos;
     }
 }
