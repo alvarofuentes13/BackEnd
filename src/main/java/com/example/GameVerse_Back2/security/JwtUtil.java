@@ -5,65 +5,63 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.stereotype.Component;
+
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLOutput;
 import java.util.Date;
-
-import static java.security.KeyRep.Type.SECRET;
-import static org.springframework.security.config.Elements.JWT;
-
 
 @Component
 public class JwtUtil {
 
     @Value("${jwt.secret}")
-    private String jwtSecret;
+    private String jwtSecret; // Clave secreta para firmar el JWT
 
     @Value("${jwt.expiration}")
-    private int jwtExpirationMs;
+    private int jwtExpirationMs; // Tiempo de expiración del JWT en milisegundos
 
-    private SecretKey key;
+    private SecretKey key; // Clave secreta utilizada para la firma
 
-    // Initializes the key after the class is instantiated and the jwtSecret is injected,
-    // preventing the repeated creation of the key and enhancing performance
+    // Inicializa la clave después de que la clase es instanciada y la jwtSecret es inyectada
     @PostConstruct
     public void init() {
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
+    // Método para obtener la clave de firma
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
+    // Método para generar un token JWT
     public String generateToken(String email) {
         return Jwts.builder()
-                .setSubject(email)
+                .setSubject(email) // Establecer el sujeto (email)
                 .setIssuedAt(new Date()) // Fecha de emisión
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs)) // Expiración
-                .signWith(getSigningKey()) // Firma con la clave secreta
-                .compact();
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs)) // Fecha de expiración
+                .signWith(getSigningKey()) // Firmar con la clave secreta
+                .compact(); // Compactar el JWT en una cadena
     }
 
+    // Método para validar el token JWT
     public boolean validateToken(String token) {
         try {
             JwtParser parser = Jwts.parser()
                     .setSigningKey(getSigningKey())
                     .build();
-            parser.parseClaimsJws(token);
-            return true;
+            parser.parseClaimsJws(token); // Analizar el token
+            return true; // Si no se lanza excepción, el token es válido
         } catch (Exception e) {
-            return false;
+            return false; // Si hay una excepción, el token no es válido
         }
     }
 
+    // Método para extraer el email del token JWT
     public String extractEmail(String token) {
         JwtParser parser = Jwts.parser()
                 .setSigningKey(getSigningKey())
                 .build();
-        Claims claims = parser.parseClaimsJws(token).getBody();
-        return claims.getSubject();
+        Claims claims = parser.parseClaimsJws(token).getBody(); // Obtener los reclamos del token
+        return claims.getSubject(); // Retornar el sujeto (email)
     }
 }
